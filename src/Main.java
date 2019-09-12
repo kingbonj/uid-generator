@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -16,12 +18,15 @@ public class Main {
 
     public static String masterUid = "";
     public static String masterPass = "";
+    public static Boolean selected = false;
+    public static Boolean console = false;
+
 
 
     public static void main(String[] args) {
 
 
-        final String VERSION = "0.1.1b";
+        final String VERSION = "1.0.0";
 
         JFrame f = new JFrame("Nebletech UID Generator v"+VERSION);
         f.setSize(410,240);
@@ -34,6 +39,7 @@ public class Main {
         input3.setBounds(200,20,80,20);
         JLabel input4 = new JLabel("Keynumber:");
         input4.setBounds(200,58,80,20);
+
 
         JTextField one = new JTextField("default");
         one.setBounds(100,22,90,20);
@@ -53,9 +59,25 @@ public class Main {
         JLabel passResult = new JLabel("xxxxxxxxxx");
         passResult.setBounds(288,150,85,20);
 
+        JCheckBox logbox = new JCheckBox("Output to uid.log");
+        logbox.setBounds(200,110,140,20);
+        logbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {//checkbox has been selected
+                    selected = true;
+                } else {//checkbox has been deselected
+                    selected = false;
+                };
+            }
+        });
+
+
         JButton button = new JButton("Generate UID");
-        button.setBounds(140,110,120,20);
+        button.setBounds(70,110,120,20);
         button.addActionListener(new ActionListener() {
+
+
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,6 +93,11 @@ public class Main {
                 passResult.setVisible(true);
                 passDisplay.setVisible(true);
 
+                if (selected) {
+                    printOutput();
+                }
+
+
 
             }
         });
@@ -84,6 +111,7 @@ public class Main {
         f.add(input3);
         f.add(input4);
         f.add(button);
+        f.add(logbox);
         f.add(uidDisplay);
         f.add(passDisplay);
 
@@ -108,14 +136,38 @@ public class Main {
         System.out.println("UID Generator initialised...");
         System.out.println("\nUSE A VIRTUAL KEYBOARD WHEN RUNNING THIS PROGRAM TO PREVENT KEYLOGGING!");
         requestChoice();
-
+        if (console){
+            printOption();
+        }
+        else {
+        }
     }
 
 
+    private static void printOption() {
+
+        System.out.println("Would you like to generate uid.log in local directory?");
+        System.out.println("*WARNING: this will generate a clear-text file containing UID and passkey. ");
+        System.out.println("\n1.\t\tYes");
+        System.out.println("2.\t\tNo\n");
+        Scanner myScanner = new Scanner(System.in);
+        try {
+            Integer answer = myScanner.nextInt();
+            if (answer == 1) {
+                printOutput();
+            } else {
+                System.out.println("Exiting program...");
+                System.exit(1);
+            }
+        } catch (Exception e){
+            printOption();
+        }
+        System.out.println("Exiting program...");
+        System.exit(1);
+    }
 
 
-
-    static void requestChoice() {
+    static void requestChoice(){
 
         System.out.println("\nPlease select an option:");
         Scanner myScanner = new Scanner(System.in);
@@ -168,6 +220,7 @@ public class Main {
 
         private static void getInput() {
 
+            console = true;
             Scanner myVar = new Scanner(System.in);
 
             System.out.print("Insert keyword 1: ");
@@ -419,30 +472,33 @@ public class Main {
         //printChoice(result,pass,key,Newstr,UID,acode,numeric);
 
 
-        System.out.println("\n*WARNING: this will generate a clear-text file containing UID and passkey. ");
+    }
+
+    private static void printOutput(){
+
         System.out.println("Outputting log to file \"uid.log\" in local directory...");
 
-            PrintWriter writer = null;
-            try {
-                writer = new PrintWriter("uid.log", "UTF-8");
-                writer.println("UID generation completed at "+(java.time.LocalDateTime.now()));
-                writer.println("\nUID: "+ result);
-                writer.println("Passkey: "+ pass);
-                writer.close();
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter("uid.log", "UTF-8");
+            writer.println("UID generation completed at "+(java.time.LocalDateTime.now()));
+            writer.println("\nUID: "+ masterUid);
+            writer.println("Passkey: "+ masterPass);
+            writer.println("\nEnd of log.");
+            writer.close();
 
-                System.out.println("File output complete. \nREMEMBER TO DELETE THIS FILE!");
+            System.out.println("File output complete.");
 
-                writer.println("\nEnd of log.");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        System.out.println("Exiting program...");
-        System.exit(1);
-
-    }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        }
 
 
 }
+
+
+
+
