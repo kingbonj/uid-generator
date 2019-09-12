@@ -1,11 +1,13 @@
-package src;//* UID Generator
+//* UID Generator
 // Beware the kraken *//
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.security.SecureRandom;
 import java.math.BigInteger;
@@ -416,52 +418,26 @@ public class Main {
         System.out.println("------------------------------------------------------");
         //printChoice(result,pass,key,Newstr,UID,acode,numeric);
 
-            System.out.println("Exiting program...");
 
-    }
-
-    static void printChoice(String x, String y, String key, String Newstr, String UID, String acode
-            ,String numeric) {
-
-            System.out.println("Output UID to file?:");
-            Scanner myScanner = new Scanner(System.in);
-            System.out.println("\n1.\t\tYes* ");
-            System.out.println("2.\t\tNo");
         System.out.println("\n*WARNING: this will generate a clear-text file containing UID and passkey. ");
-
-        String answer = myScanner.next();
-            switch (answer) {
-                case "1":
-                case "y":
-                case "yes":
-                try {
-                    printOutput(x,y,key,Newstr,UID,acode,numeric);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        System.out.println("Exiting program...");
-        System.exit(1);
-    }
-
-    private static void printOutput(String x, String y, String key, String Newstr, String UID, String acode
-    ,String numeric) throws Exception {
-
-        // generates the logfile and saves to local directory
-
         System.out.println("Outputting log to file \"uid.log\" in local directory...");
 
-        PrintWriter writer = new PrintWriter("uid.log", "UTF-8");
-        writer.println("UID generation completed at "+(java.time.LocalDateTime.now()));
-        writer.println("\nUID: "+ x);
-        writer.println("Passkey: "+ y);
+            PrintWriter writer = null;
+            try {
+                writer = new PrintWriter("uid.log", "UTF-8");
+                writer.println("UID generation completed at "+(java.time.LocalDateTime.now()));
+                writer.println("\nUID: "+ result);
+                writer.println("Passkey: "+ pass);
+                writer.close();
 
-        writer.println("\nEnd of log.");
+                System.out.println("File output complete. \nREMEMBER TO DELETE THIS FILE!");
 
-        writer.close();
-
-        System.out.println("File output complete. \nREMEMBER TO DELETE THIS FILE!");
+                writer.println("\nEnd of log.");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
         System.out.println("Exiting program...");
         System.exit(1);
