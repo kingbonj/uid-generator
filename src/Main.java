@@ -1,4 +1,4 @@
-//* UID Generator
+package src;//* UID Generator
 // Beware the kraken *//
 
 import javax.swing.*;
@@ -96,6 +96,8 @@ public class Main {
 
         Image icon = Toolkit.getDefaultToolkit().getImage("icon.png");
         f.setIconImage(icon);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
         f.setLayout(null);
         f.setVisible(true);

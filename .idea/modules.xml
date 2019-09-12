@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/uid-generator.iml" filepath="$PROJECT_DIR$/uid-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/uid-generator.iml" filepath="$PROJECT_DIR$/.idea/uid-generator.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_uid-generator" default="compile.module.uid-generator">
+  <dirname property="module.uid-generator.basedir" file="${ant.file.module_uid-generator}"/>
+  
+  <property name="module.jdk.home.uid-generator" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.uid-generator" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.uid-generator" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.uid-generator" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="uid-generator.output.dir" value="${module.uid-generator.basedir}/out/production/uid-generator"/>
+  <property name="uid-generator.testoutput.dir" value="${module.uid-generator.basedir}/out/test/uid-generator"/>
+  
+  <path id="uid-generator.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="uid-generator.module.production.classpath">
+    <path refid="${module.jdk.classpath.uid-generator}"/>
+  </path>
+  
+  <path id="uid-generator.runtime.production.module.classpath">
+    <pathelement location="${uid-generator.output.dir}"/>
+  </path>
+  
+  <path id="uid-generator.module.classpath">
+    <path refid="${module.jdk.classpath.uid-generator}"/>
+    <pathelement location="${uid-generator.output.dir}"/>
+  </path>
+  
+  <path id="uid-generator.runtime.module.classpath">
+    <pathelement location="${uid-generator.testoutput.dir}"/>
+    <pathelement location="${uid-generator.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.uid-generator">
+    <patternset refid="ignored.files"/>
+    <exclude name="out/**"/>
+    <exclude name="out/production/**"/>
+    <exclude name="out/production/uid-generator/**"/>
+    <exclude name="out/production/uid-generator/.idea/**"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.uid-generator">
+    <patternset refid="excluded.from.module.uid-generator"/>
+  </patternset>
+  
+  <path id="uid-generator.module.sourcepath">
+    <dirset dir="${module.uid-generator.basedir}/../../GitHub">
+      <include name="uid-generator"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.uid-generator" depends="compile.module.uid-generator.production,compile.module.uid-generator.tests" description="Compile module uid-generator"/>
+  
+  <target name="compile.module.uid-generator.production" depends="register.custom.compilers" description="Compile module uid-generator; production classes">
+    <mkdir dir="${uid-generator.output.dir}"/>
+    <javac2 destdir="${uid-generator.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.uid-generator}/javac">
+      <compilerarg line="${compiler.args.uid-generator}"/>
+      <bootclasspath refid="uid-generator.module.bootclasspath"/>
+      <classpath refid="uid-generator.module.production.classpath"/>
+      <src refid="uid-generator.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.uid-generator"/>
+    </javac2>
+    
+    <copy todir="${uid-generator.output.dir}">
+      <fileset dir="${module.uid-generator.basedir}">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.uid-generator.tests" depends="register.custom.compilers,compile.module.uid-generator.production" description="compile module uid-generator; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.uid-generator" description="cleanup module">
+    <delete dir="${uid-generator.output.dir}"/>
+    <delete dir="${uid-generator.testoutput.dir}"/>
+  </target>
+</project>
